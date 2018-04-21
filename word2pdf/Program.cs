@@ -9,6 +9,12 @@ namespace word2pdf
 {
     class Program
     {
+        /// <summary>
+        /// word2pdf converts a single word document to PDF. It can also convert a
+        /// set of documents by specifying a folder containing files with doc and docx 
+        /// extensions
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             var parser = new CommandLine();
@@ -16,23 +22,33 @@ namespace word2pdf
 
             if (parser.Arguments.Count > 0)
             {
-                WordFiles wordfiles = new WordFiles(parser.Arguments["convert"][0]);
-
                 if (parser.Arguments.ContainsKey("convert"))
                 {
-                    PDFConverter pdfConverter = new PDFConverter();
-                    pdfConverter.wordFile = @parser.Arguments["convert"][0];
-                    pdfConverter.Convert();
+                    WordFiles wordfiles = new WordFiles(parser.Arguments["convert"][0]);
+                    if (wordfiles.Count > 0)
+                    {
+                        PDFConverter pdfConverter = new PDFConverter();
+                        pdfConverter.WordFile = @parser.Arguments["convert"][0];
+                        pdfConverter.Convert();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Nothing to do.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Nothing to do.");
+                    usage();
                 }
             }
             else
             {
-                Console.WriteLine("Nothing to do.");
+                usage();
             }
+        }
+        static void usage()
+        {
+            Console.WriteLine("word2pdf -convert file [folder]");
         }
     }
 }

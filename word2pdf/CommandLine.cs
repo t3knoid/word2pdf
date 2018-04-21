@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace word2pdf
 {
+    /// <summary>
+    /// A simple command-line parser
+    /// </summary>
     public class CommandLine
     {
         public CommandLine()
         {
             Arguments = new Dictionary<string, string[]>();
         }
-
         public IDictionary<string, string[]> Arguments { get; private set; }
-
         public void Parse(string[] args)
         {
             var currentName = "";
@@ -38,7 +39,6 @@ namespace word2pdf
             if (currentName != "")
                 Arguments[currentName] = values.ToArray();
         }
-
         public bool Contains(string name)
         {
             return Arguments.ContainsKey(name);

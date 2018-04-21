@@ -11,28 +11,39 @@ using System.Reflection;
 
 namespace word2pdf
 {
+    /// <summary>
+    /// Converts a Word document to PDF format
+    /// </summary>
     class PDFConverter
     {
-        public string wordFile {get; set;}
+        /// <summary>
+        /// A fully qualified path to a word document.
+        /// </summary>
+        public string WordFile {get; set;}
 
         public PDFConverter(string file)
         {
-            this.wordFile = file;
+            this.WordFile = file;
         }
 
         public PDFConverter()
         {
         }
-
+        /// <summary>
+        /// Converts a Word document to pdf. Specify the Word document using the
+        /// wordFile property.
+        /// </summary>
         public void Convert()
         {
-            Application word = new Application();
-            // Configure Word settings
-            word.Visible = false;
-            word.ScreenUpdating = false;
+            Application word = new Application
+            {
+                // Configure Word settings
+                Visible = false,
+                ScreenUpdating = false
+            };
             object _MissingValue = Missing.Value;
             Document wordDoc = null;
-            object filename = (object)wordFile;
+            object filename = (object)WordFile;
             try
             {
                 wordDoc = word.Documents.Open(ref filename, ref _MissingValue,
@@ -40,7 +51,7 @@ namespace word2pdf
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue);
                 wordDoc.Activate();
-                string pdfFileName = Path.ChangeExtension(wordFile, "pdf");
+                string pdfFileName = Path.ChangeExtension(WordFile, "pdf");
                 object fileFormat = WdSaveFormat.wdFormatPDF;
                 wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
             }

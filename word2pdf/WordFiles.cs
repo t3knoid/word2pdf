@@ -7,16 +7,26 @@ using System.Threading.Tasks;
 
 namespace word2pdf
 {
+    /// <summary>
+    /// A list of Word documents enumerated from the specified folder.
+    /// </summary>
     class WordFiles
     {
         public List<string> files = new List<string>();
-        public List<string> ext { get; set; }
-        public string path { get; set; }
+        public List<string> Ext { get; set; }
+        public string Param { get; set; }
+        public int Count
+        {
+            get
+            {
+                return files.Count();
+            }
+        }
 
         public WordFiles(string p)
         {
-            this.ext = new List<string> {"doc","docx"};
-            this.path = p;
+            this.Ext = new List<string> {"doc","docx"};
+            this.Param = Path.GetFullPath(p);
             GetFileList();
        }
 
@@ -27,18 +37,18 @@ namespace word2pdf
         {
             try
             {
-                FileAttributes attr = File.GetAttributes(@path);
+                FileAttributes attr = File.GetAttributes(Param);
                 if (attr.HasFlag(FileAttributes.Directory))
                 {
                     // Read files from the directory
-                    foreach (string file in Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s))))
+                    foreach (string file in Directory.GetFiles(Param, "*.*", SearchOption.AllDirectories).Where(s => Ext.Contains(System.IO.Path.GetExtension(s))))
                     {
                         files.Add(file);
                     }
                 }
                 else
                 {
-                    files.Add(path);
+                    files.Add(Param);
                 }
             }
             catch (Exception ex)
