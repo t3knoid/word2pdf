@@ -27,9 +27,12 @@ namespace word2pdf
                     WordFiles wordfiles = new WordFiles(parser.Arguments["convert"][0]);
                     if (wordfiles.Count > 0)
                     {
-                        PDFConverter pdfConverter = new PDFConverter();
-                        pdfConverter.WordFile = @parser.Arguments["convert"][0];
-                        pdfConverter.Convert();
+                        foreach (string wordfile in wordfiles.Docfiles)
+                        {
+                            PDFConverter pdfConverter = new PDFConverter();
+                            pdfConverter.WordFile = @wordfile;
+                            pdfConverter.Convert();
+                        }
                     }
                     else
                     {

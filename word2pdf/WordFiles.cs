@@ -12,20 +12,19 @@ namespace word2pdf
     /// </summary>
     class WordFiles
     {
-        public List<string> files = new List<string>();
+        public List<string> Docfiles = new List<string>();
         public List<string> Ext { get; set; }
         public string Param { get; set; }
         public int Count
         {
             get
             {
-                return files.Count();
+                return Docfiles.Count();
             }
         }
 
         public WordFiles(string p)
         {
-            this.Ext = new List<string> {"doc","docx"};
             this.Param = Path.GetFullPath(p);
             GetFileList();
        }
@@ -40,15 +39,14 @@ namespace word2pdf
                 FileAttributes attr = File.GetAttributes(Param);
                 if (attr.HasFlag(FileAttributes.Directory))
                 {
-                    // Read files from the directory
-                    foreach (string file in Directory.GetFiles(Param, "*.*", SearchOption.AllDirectories).Where(s => Ext.Contains(System.IO.Path.GetExtension(s))))
+                    foreach (string file in Directory.GetFiles(Param, "*.doc"))
                     {
-                        files.Add(file);
+                        Docfiles.Add(file);
                     }
                 }
                 else
                 {
-                    files.Add(Param);
+                    Docfiles.Add(Param);
                 }
             }
             catch (Exception ex)
