@@ -35,12 +35,23 @@ namespace word2pdf
         /// </summary>
         public void Convert()
         {
-            Application word = new Application
+            Application word = null;
+
+            try
             {
-                // Configure Word settings
-                Visible = false,
-                ScreenUpdating = false
-            };
+                word = new Application
+                {
+                    // Configure Word settings
+                    Visible = false,
+                    ScreenUpdating = false
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                Environment.Exit(1);
+            }
+
             object _MissingValue = Missing.Value;
             Document wordDoc = null;
             object filename = (object)WordFile;
@@ -63,7 +74,7 @@ namespace word2pdf
             {
                 if (wordDoc !=null)
                 {
-                    wordDoc.Close(ref _MissingValue, ref _MissingValue, ref _MissingValue);
+                    wordDoc.Close(WdSaveOptions.wdDoNotSaveChanges, WdOriginalFormat.wdOriginalDocumentFormat, false);
                 }
                
             }
