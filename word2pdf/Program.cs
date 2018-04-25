@@ -31,6 +31,7 @@ namespace word2pdf
                         {
                             PDFConverter pdfConverter = new PDFConverter();
                             pdfConverter.WordFile = @wordfile;
+                            Console.WriteLine(String.Format("Converting {0} to PDF.", wordfile));
                             pdfConverter.Convert();
                         }
                     }

@@ -48,7 +48,7 @@ namespace word2pdf
             }
             catch (Exception ex)
             {
-                Console.Write(ex.Message);
+                Console.Write(String.Format("Failed to initialize Word. {0}",ex.Message));
                 Environment.Exit(1);
             }
 
@@ -57,24 +57,44 @@ namespace word2pdf
             object filename = (object)WordFile;
             try
             {
+                //wordDoc = word.Documents.Open(ref filename, Visible: true);
                 wordDoc = word.Documents.Open(ref filename, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue);
+            }
+            catch (Exception ex){
+                Console.WriteLine(String.Format("Failed to open Word doc. {0} ", ex.ToString()));
+            }
+            try
+            {
                 wordDoc.Activate();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(String.Format("Failed to focus on document. {0} ", ex.ToString()));
+            }
+            try 
+            {
                 string pdfFileName = Path.ChangeExtension(WordFile, "pdf");
                 object fileFormat = WdSaveFormat.wdFormatPDF;
                 wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(String.Format("{0}",ex.Message));
+                Console.WriteLine(String.Format("Failed creating a PDF document. {0} ", ex.ToString()));
             }
             finally
             {
                 if (wordDoc !=null)
                 {
+                    Console.WriteLine("Closing document.");
                     wordDoc.Close(WdSaveOptions.wdDoNotSaveChanges, WdOriginalFormat.wdOriginalDocumentFormat, false);
+                }
+                if (word != null)
+                {
+                    Console.WriteLine("Exiting Word.");
+                    word.Quit();
                 }
                
             }
