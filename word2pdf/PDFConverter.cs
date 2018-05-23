@@ -62,6 +62,7 @@ namespace word2pdf
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue);
+                wordDoc.Fields.Update();
             }
             catch (Exception ex){
                 Console.WriteLine(String.Format("Failed to open Word doc. {0} ", ex.ToString()));
