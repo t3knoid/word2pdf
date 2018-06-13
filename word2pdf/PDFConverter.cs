@@ -50,6 +50,8 @@ namespace word2pdf
             {
                 Console.Write(String.Format("Failed to initialize Word. {0}",ex.Message));
                 Environment.Exit(1);
+                Console.WriteLine(ex.StackTrace);
+                return;
             }
 
             object _MissingValue = Missing.Value;
@@ -62,28 +64,54 @@ namespace word2pdf
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue,
                      ref _MissingValue, ref _MissingValue, ref _MissingValue, ref _MissingValue);
-                wordDoc.Fields.Update();
-            }
-            catch (Exception ex){
-                Console.WriteLine(String.Format("Failed to open Word doc. {0} ", ex.ToString()));
-            }
-            try
-            {
-                wordDoc.Activate();
+
+                System.Threading.Thread.Sleep(500);
+                Console.WriteLine("Waiting for Word to initialize");
+
+                if (word.Documents.Count < 1)
+                {
+                    Console.WriteLine("Unable to open the specified document. If this is being executed by a service in a 64-bit environment, perform the following: \n(1) Launch C:\\Windows\\System32\\compexp.msc.\n(2) Open DCOM Config\\Microsoft Word 97 - 2003 Document Properties.\n(3) Set the Identity to 'The interactive user.'");
+                    return;
+                }
+
+                try 
+                {
+                    wordDoc.Activate();
+                    try
+                    {
+                        wordDoc.Fields.Update();
+                        try
+                        {
+                            string pdfFileName = Path.ChangeExtension(WordFile, "pdf");
+                            object fileFormat = WdSaveFormat.wdFormatPDF;
+                            wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(String.Format("Failed creating a PDF document. {0}", ex.Message));
+                            Console.WriteLine(ex.StackTrace);
+                            Console.WriteLine(ex.InnerException);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(String.Format("Failed to update fields. {0}", ex.Message));
+                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine(ex.InnerException);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(String.Format("Failed to focus on document. {0}", ex.Message));
+                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.InnerException);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(String.Format("Failed to focus on document. {0} ", ex.ToString()));
-            }
-            try 
-            {
-                string pdfFileName = Path.ChangeExtension(WordFile, "pdf");
-                object fileFormat = WdSaveFormat.wdFormatPDF;
-                wordDoc.ExportAsFixedFormat(pdfFileName, WdExportFormat.wdExportFormatPDF);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(String.Format("Failed creating a PDF document. {0} ", ex.ToString()));
+                Console.WriteLine(String.Format("Failed to open Word doc. {0}", ex.Message));
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.InnerException);
             }
             finally
             {
