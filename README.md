@@ -14,4 +14,6 @@ https://social.msdn.microsoft.com/Forums/en-US/0f5448a7-72ed-4f16-8b87-922b71892
 3. Right-click the Microsoft Word 97-2003 Document entry and select Properties.
 4. Click on the Identity tab.
 5. Select "The interactive user."
-
+6. Click the Security tab.
+7. Select Customize under Launch and Activation Permissions and click Edit…
+8. Add the account under which the site is running (eg: Network Service) and assign Local Launch & Local Activation permissions.
